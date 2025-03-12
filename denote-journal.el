@@ -1,4 +1,4 @@
-;;; denote-journal.el --- Convenience functions for daily journaling  -*- lexical-binding: t; -*-
+;;; denote-journal.el --- Convenience functions for daily journaling with Denote -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2023-2025  Free Software Foundation, Inc.
 
@@ -34,7 +34,7 @@
 (require 'denote)
 
 (defgroup denote-journal nil
-  "Denote for daily journaling."
+  "Convenience functions for daily journaling with Denote."
   :group 'denote
   :link '(info-link "(denote) Top")
   :link '(url-link :tag "Homepage" "https://protesilaos.com/emacs/denote"))
