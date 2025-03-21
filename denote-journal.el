@@ -198,7 +198,7 @@ DATE has the same format as that returned by `denote-valid-date-p'."
 (defun denote-journal--entry-today (&optional date)
   "Return list of files matching a journal for today or optional DATE.
 DATE has the same format as that returned by `denote-valid-date-p'."
-  (denote-directory-files (denote-journal--filename-date-regexp date)))
+  (denote-directory-files (denote-journal--filename-date-regexp date) nil nil nil denote-journal-directory))
 
 (define-obsolete-function-alias
   'denote-journal-extra-path-to-new-or-existing-entry
