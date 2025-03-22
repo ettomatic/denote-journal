@@ -37,7 +37,9 @@
   "Convenience functions for daily journaling with Denote."
   :group 'denote
   :link '(info-link "(denote) Top")
-  :link '(url-link :tag "Homepage" "https://protesilaos.com/emacs/denote"))
+  :link '(info-link "(denote-journal) Top")
+  :link '(url-link :tag "Denote homepage" "https://protesilaos.com/emacs/denote")
+  :link '(url-link :tag "Denote Journal homepage" "https://protesilaos.com/emacs/denote-journal"))
 
 (defcustom denote-journal-directory
   (expand-file-name "journal" denote-directory)
