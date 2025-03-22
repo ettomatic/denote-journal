@@ -202,11 +202,6 @@ DATE has the same format as that returned by `denote-valid-date-p'."
    (denote-journal--filename-date-regexp date)
    nil nil nil (file-name-as-directory denote-journal-directory)))
 
-(define-obsolete-function-alias
-  'denote-journal-extra-path-to-new-or-existing-entry
-  'denote-journal-path-to-new-or-existing-entry
-  "3.2.0")
-
 ;;;###autoload
 (defun denote-journal-path-to-new-or-existing-entry (&optional date)
   "Return path to existing or new journal file.
