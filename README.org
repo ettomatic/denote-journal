@@ -384,6 +384,8 @@ Denote Journal is meant to be a collective effort.  Every bit of help matters.
 
 + Author/maintainer :: Protesilaos Stavrou.
 
++ Contributions to code or the manual :: Honza Pokorny, Vineet C. Kulkarni.
+
 + Ideas and/or user feedback :: Kevin McCarthy.
 
 * GNU Free Documentation License
