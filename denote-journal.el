@@ -298,29 +298,34 @@ Return (MONTH DAY YEAR) or nil if not an Org time-string."
     (pcase-let ((`(,year ,month ,day) numbers))
       (list month day year))))
 
-;; FIXME 2025-03-31: Only get files that are within the visible
-;; calendar range.  We have the building block for finding this in
-;; `calendar-date-is-visible-p'.  Though we need to be careful to also
-;; get the year when it changes.  The idea is to write the range as a
-;; regexp to pass to `denote-directory-files', like:
-;;
-;; (concat "20250[2-4].*" (denote-journal--keyword-regex)).
-(defun denote-journal-calendar--get-files ()
-  "Return list of files matching variable `denote-journal-keyword'."
-  (let ((denote-directory (denote-journal-directory)))
-    (denote-directory-files (denote-journal--keyword-regex))))
-
-(defun denote-journal-calendar--get-files-as-dates ()
-  "Return list of files as dates in the form of (MONTH DAY YEAR)."
-  (when-let* ((files (denote-journal-calendar--get-files)))
-    (delq nil (mapcar #'denote-journal-calendar--file-to-date files))))
+(defun denote-journal-calendar--get-files (calendar-date)
+  "Return files around CALENDAR-DATE in variable `denote-journal-keyword'."
+  (pcase-let* ((denote-directory (denote-journal-directory))
+               (interval (calendar-interval
+                          displayed-month displayed-year ; These are local to the `calendar'
+                          (calendar-extract-month calendar-date) (calendar-extract-year calendar-date)))
+               (`(,current-month ,_ ,current-year) calendar-date)
+               (`(,previous-month . ,previous-year) (calendar-increment-month-cons (- interval 1)))
+               (`(,next-month . ,next-year) (calendar-increment-month-cons (+ interval 1)))
+               (years (list previous-year current-year next-year))
+               (months (list previous-month current-month next-month))
+               (time-regexp (concat (regexp-opt (mapcar #'number-to-string years))
+                                    (regexp-opt (mapcar #'number-to-string months))))
+               (keyword-regexp (denote-journal--keyword-regex)))
+    (denote-directory-files
+     ;; NOTE 2025-03-31: This complex regular expression is to account
+     ;; for `denote-file-name-components-order'.  We should probably
+     ;; have something in `denote.el' to do this fancy stuff, though
+     ;; this is the first time I have a use-case for it.
+     (format "\\(%1$s\\|%2$s\\)\\(.*\\)\\|\\(%2$s\\|%1$s\\)" time-regexp keyword-regexp))))
 
 (defun denote-journal-calendar-mark-dates ()
   "Mark all days in the `calendar' for which there is a Denote journal entry."
   (interactive)
-  (when-let* ((dates (denote-journal-calendar--get-files-as-dates))
-              (visible-dates (seq-filter #'calendar-date-is-visible-p dates)))
-    (dolist (date visible-dates)
+  (when-let* ((date (calendar-cursor-to-date))
+              (files (denote-journal-calendar--get-files date))
+              (dates (delq nil (mapcar #'denote-journal-calendar--file-to-date files))))
+    (dolist (date dates)
       (calendar-mark-visible-date date 'denote-journal-calendar))))
 
 (defun denote-journal-calendar--date-to-time (calendar-date)
