@@ -311,10 +311,10 @@ Return (MONTH DAY YEAR) or nil if not an Org time-string."
 (defun denote-journal-calendar-mark-dates ()
   "Mark all days in the `calendar' for which there is a Denote journal entry."
   (interactive)
-  (when-let* ((dates (denote-journal-calendar--get-files-as-dates)))
-    (dolist (date dates)
-      (when (calendar-date-is-visible-p date)
-        (calendar-mark-visible-date date 'denote-journal-calendar)))))
+  (when-let* ((dates (denote-journal-calendar--get-files-as-dates))
+              (visible-dates (seq-filter #'calendar-date-is-visible-p dates)))
+    (dolist (date visible-dates)
+      (calendar-mark-visible-date date 'denote-journal-calendar))))
 
 (defun denote-journal-calendar--date-at-point-to-internal-date (&optional calendar-date)
   "Return `encode-time' value of `calendar' date at point or CALENDAR-DATE.
