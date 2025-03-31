@@ -368,7 +368,7 @@ among them."
 ;;;###autoload
 (define-minor-mode denote-journal-calendar-mode
   "Mark Denote journal entries in the `calendar' using `denote-journal-calendar' face."
-  :global t
+  :global nil
   :init-value nil
   (if denote-journal-calendar-mode
       (dolist (hook '(calendar-today-visible-hook calendar-today-invisible-hook))
