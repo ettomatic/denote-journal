@@ -286,8 +286,7 @@ file's title.  This has the same meaning as in `denote-link'."
 
 ;;;; Integration with the `calendar'
 
-(defface denote-journal-calendar
-  '((t :inherit highlight :box (:line-width (-1 . -1))))
+(defface denote-journal-calendar '((t :box (:line-width (-1 . -1))))
   "Face to mark a Denote journal entry in the `calendar'.")
 
 (defun denote-journal-calendar--file-to-date (file)
