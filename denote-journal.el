@@ -318,16 +318,18 @@ Return (MONTH DAY YEAR) or nil if not an Org time-string."
     (dolist (date visible-dates)
       (calendar-mark-visible-date date 'denote-journal-calendar))))
 
-(defun denote-journal-calendar--date-at-point-to-internal-date (&optional calendar-date)
-  "Return `encode-time' value of `calendar' date at point or CALENDAR-DATE.
+(defun denote-journal-calendar--date-to-time (calendar-date)
+  "Return internal time of `calendar' CALENDAR-DATE.
 CALENDAR-DATE is commensurate with `calendar-cursor-to-date'."
-  (when-let* ((current-date (or calendar-date (calendar-cursor-to-date t))))
-    (pcase-let ((`(,month ,day ,year) current-date))
-      (encode-time (decode-time (date-to-time (format "%s-%02d-%02d" year month day)))))))
+  (when-let* ((current-date calendar-date))
+    (pcase-let ((`(,month ,day ,year) current-date)
+                (time (format-time-string "%T")))
+      (date-to-time (format "%s-%02d-%02d %s" year month day time)))))
 
-(defun denote-journal-calendar--date-at-point-to-identifier ()
-  "Return path to Denote journal entry for the `calendar' date at point."
-  (when-let* ((date (denote-journal-calendar--date-at-point-to-internal-date)))
+(defun denote-journal-calendar--date-at-point-to-identifier (calendar-date)
+  "Return path to Denote journal entry corresponding to CALENDAR-DATE.
+CALENDAR-DATE is commensurate with `calendar-cursor-to-date'."
+  (when-let* ((date (denote-journal-calendar--date-to-time calendar-date)))
     (denote-journal--entry-today date)))
 
 (defun denote-journal-calendar-find-file ()
@@ -338,9 +340,10 @@ among them."
   (interactive nil calendar-mode)
   (unless (derived-mode-p 'calendar-mode)
     (user-error "Only use this command inside the `calendar'"))
-  (if-let* ((files (denote-journal-calendar--date-at-point-to-identifier))
+  (if-let* ((calendar-date (calendar-cursor-to-date))
+            (files (denote-journal-calendar--date-at-point-to-identifier calendar-date))
             (file (if (> (length files) 1)
-                      (completing-read "Select journal entry: " file nil t)
+                      (completing-read "Select journal entry: " files nil t)
                     (car files))))
       (find-file-other-window file)
     (user-error "No Denote journal entry for this date")))
@@ -351,14 +354,14 @@ among them."
   (interactive nil calendar-mode)
   (unless (derived-mode-p 'calendar-mode)
     (user-error "Only use this command inside the `calendar'"))
-  (if-let* ((date (calendar-cursor-to-date t))
-            (internal (denote-journal-calendar--date-at-point-to-internal-date date)))
+  (if-let* ((calendar-date (calendar-cursor-to-date))
+            (internal (denote-journal-calendar--date-to-time calendar-date)))
       (progn
-        (calendar-mark-visible-date date 'denote-journal-calendar)
+        (calendar-mark-visible-date calendar-date 'denote-journal-calendar)
         ;; Do not use the same `calendar' window...
         (cl-letf (((symbol-function #'find-file) #'find-file-other-window))
           (denote-journal-new-or-existing-entry internal)))
-    (user-error "No Denote journal entry for this date")))
+    (user-error "No Denote journal entry for this calendar-date")))
 
 (defvar denote-journal-calendar-mode-map
   (let ((map (make-sparse-keymap)))
