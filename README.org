@@ -61,6 +61,86 @@ included in the section entitled “GNU Free Documentation License.”
 modify this GNU manual.”
 #+end_quote
 
+* Installation
+:PROPERTIES:
+:CUSTOM_ID: h:installation
+:END:
+#+cindex: Installation instructions
+
+** GNU ELPA package
+:PROPERTIES:
+:CUSTOM_ID: h:gnu-elpa-package
+:END:
+
+The package is available as =denote-journal=.  Simply do:
+
+: M-x package-refresh-contents
+: M-x package-install
+
+And search for it.
+
+GNU ELPA provides the latest stable release.  Those who prefer to follow
+the development process in order to report bugs or suggest changes, can
+use the version of the package from the GNU-devel ELPA archive.  Read:
+https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/.
+
+** Manual installation
+:PROPERTIES:
+:CUSTOM_ID: h:manual-installation
+:END:
+
+Assuming your Emacs files are found in =~/.emacs.d/=, execute the
+following commands in a shell prompt:
+
+#+begin_src sh
+cd ~/.emacs.d
+
+# Create a directory for manually-installed packages
+mkdir manual-packages
+
+# Go to the new directory
+cd manual-packages
+
+# Clone this repo, naming it "denote-journal"
+git clone https://github.com/protesilaos/denote-journal denote-journal
+#+end_src
+
+Finally, in your =init.el= (or equivalent) evaluate this:
+
+#+begin_src emacs-lisp
+;; Make Elisp files in that directory available to the user.
+(add-to-list 'load-path "~/.emacs.d/manual-packages/denote-journal")
+#+end_src
+
+Everything is in place to set up the package.
+
+* Sample configuration
+:PROPERTIES:
+:CUSTOM_ID: h:sample-configuration
+:END:
+#+cindex: Package configuration
+
+#+begin_src emacs-lisp
+(use-package denote-journal
+  :ensure t
+  ;; Bind those to some key for your convenience.
+  :commands ( denote-journal-new-entry
+              denote-journal-new-or-existing-entry
+              denote-journal-link-or-create-entry )
+  :config
+  ;; Use the "journal" subdirectory of the `denote-directory'.  Set this
+  ;; to nil to use the `denote-directory' instead.
+  (setq denote-journal-directory
+        (expand-file-name "journal" denote-directory))
+  ;; Default keyword for new journal entries. It can also be a list of
+  ;; strings.
+  (setq denote-journal-keyword "journal")
+  ;; Read the doc string of `denote-journal-title-format'.
+  (setq denote-journal-title-format 'day-date-month-year)
+
+  (denote-journal-calendar-mode 1))
+#+end_src
+
 * Overview
 :PROPERTIES:
 :CUSTOM_ID: h:overview
@@ -327,86 +407,6 @@ Sources for ~tmr~:
   + GitHub: <https://github.com/protesilaos/tmr>
   + GitLab: <https://gitlab.com/protesilaos/tmr>
 + Backronym: TMR May Ring; Timer Must Run.
-
-* Installation
-:PROPERTIES:
-:CUSTOM_ID: h:installation
-:END:
-#+cindex: Installation instructions
-
-** GNU ELPA package
-:PROPERTIES:
-:CUSTOM_ID: h:gnu-elpa-package
-:END:
-
-The package is available as =denote-journal=.  Simply do:
-
-: M-x package-refresh-contents
-: M-x package-install
-
-And search for it.
-
-GNU ELPA provides the latest stable release.  Those who prefer to follow
-the development process in order to report bugs or suggest changes, can
-use the version of the package from the GNU-devel ELPA archive.  Read:
-https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/.
-
-** Manual installation
-:PROPERTIES:
-:CUSTOM_ID: h:manual-installation
-:END:
-
-Assuming your Emacs files are found in =~/.emacs.d/=, execute the
-following commands in a shell prompt:
-
-#+begin_src sh
-cd ~/.emacs.d
-
-# Create a directory for manually-installed packages
-mkdir manual-packages
-
-# Go to the new directory
-cd manual-packages
-
-# Clone this repo, naming it "denote-journal"
-git clone https://github.com/protesilaos/denote-journal denote-journal
-#+end_src
-
-Finally, in your =init.el= (or equivalent) evaluate this:
-
-#+begin_src emacs-lisp
-;; Make Elisp files in that directory available to the user.
-(add-to-list 'load-path "~/.emacs.d/manual-packages/denote-journal")
-#+end_src
-
-Everything is in place to set up the package.
-
-* Sample configuration
-:PROPERTIES:
-:CUSTOM_ID: h:sample-configuration
-:END:
-#+cindex: Package configuration
-
-#+begin_src emacs-lisp
-(use-package denote-journal
-  :ensure t
-  ;; Bind those to some key for your convenience.
-  :commands ( denote-journal-new-entry
-              denote-journal-new-or-existing-entry
-              denote-journal-link-or-create-entry )
-  :config
-  ;; Use the "journal" subdirectory of the `denote-directory'.  Set this
-  ;; to nil to use the `denote-directory' instead.
-  (setq denote-journal-directory
-        (expand-file-name "journal" denote-directory))
-  ;; Default keyword for new journal entries. It can also be a list of
-  ;; strings.
-  (setq denote-journal-keyword "journal")
-  ;; Read the doc string of `denote-journal-title-format'.
-  (setq denote-journal-title-format 'day-date-month-year)
-
-  (denote-journal-calendar-mode 1))
-#+end_src
 
 * Acknowledgements
 :PROPERTIES:
