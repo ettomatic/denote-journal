@@ -201,7 +201,7 @@ DATE has the same format as that returned by `denote-valid-date-p'."
 (defun denote-journal--entry-today (&optional date)
   "Return list of files matching a journal for today or optional DATE.
 DATE has the same format as that returned by `denote-valid-date-p'."
-  (let ((denote-directory (file-name-as-directory (denote-journal-directory))))
+  (let ((denote-directory (denote-journal-directory)))
     (denote-directory-files (denote-journal--filename-date-regexp date))))
 
 ;;;###autoload
@@ -300,7 +300,7 @@ Return (MONTH DAY YEAR) or nil if not an Org time-string."
 
 (defun denote-journal-calendar--get-files ()
   "Return list of files matching variable `denote-journal-keyword'."
-  (let ((denote-directory (file-name-as-directory (denote-journal-directory))))
+  (let ((denote-directory (denote-journal-directory)))
     (denote-directory-files (denote-journal--keyword-regex))))
 
 ;; TODO 2025-03-31: Can we know the range of visible dates in the
