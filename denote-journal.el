@@ -365,7 +365,6 @@ among them."
     map)
   "Key map for `denote-journal-calendar-mode'.")
 
-;;;###autoload
 (define-minor-mode denote-journal-calendar-mode
   "Mark Denote journal entries in the `calendar' using `denote-journal-calendar' face."
   :global nil

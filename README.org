@@ -127,6 +127,7 @@ Everything is in place to set up the package.
   :commands ( denote-journal-new-entry
               denote-journal-new-or-existing-entry
               denote-journal-link-or-create-entry )
+  :hook (calendar-mode . denote-journal-calendar-mode)
   :config
   ;; Use the "journal" subdirectory of the `denote-directory'.  Set this
   ;; to nil to use the `denote-directory' instead.
@@ -136,9 +137,7 @@ Everything is in place to set up the package.
   ;; strings.
   (setq denote-journal-keyword "journal")
   ;; Read the doc string of `denote-journal-title-format'.
-  (setq denote-journal-title-format 'day-date-month-year)
-
-  (denote-journal-calendar-mode 1))
+  (setq denote-journal-title-format 'day-date-month-year))
 #+end_src
 
 * Overview
@@ -250,9 +249,14 @@ completion to select one among them.
 
 #+findex: denote-journal-calendar-mode
 #+vindex: denote-journal-calendar
-The minor mode ~denote-journal-calendar-mode~ marks the dates in the
-=M-x calendar= that have a Denote journal entry. The face applied to
-them is the ~denote-journal-calendar~.
+The buffer-local minor mode ~denote-journal-calendar-mode~ marks the
+dates in the =M-x calendar= that have a Denote journal entry. The face
+applied to them is the ~denote-journal-calendar~. Activate the mode
+via the ~calendar-mode-hook~:
+
+#+begin_src emacs-lisp
+(add-hook 'calendar-mode-hook #'denote-journal-calendar-mode)
+#+end_src
 
 #+vindex: denote-journal-calendar-mode-map
 The ~denote-journal-calendar-mode~ also activates the key map called
