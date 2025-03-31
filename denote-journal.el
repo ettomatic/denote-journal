@@ -371,14 +371,15 @@ among them."
   "Key map for `denote-journal-calendar-mode'.")
 
 (define-minor-mode denote-journal-calendar-mode
-  "Mark Denote journal entries in the `calendar' using `denote-journal-calendar' face."
+  "Mark Denote journal entries using `denote-journal-calendar' face.
+Add the function `denote-journal-calendar-mode' to the
+`calendar-mode-hook' for changes to take effect."
   :global nil
-  :init-value nil
   (if denote-journal-calendar-mode
       (dolist (hook '(calendar-today-visible-hook calendar-today-invisible-hook))
-        (add-hook hook #'denote-journal-calendar-mark-dates))
+        (add-hook hook #'denote-journal-calendar-mark-dates nil :local))
     (dolist (hook '(calendar-today-visible-hook calendar-today-invisible-hook))
-      (remove-hook hook #'denote-journal-calendar-mark-dates))))
+      (remove-hook hook #'denote-journal-calendar-mark-dates nil :local))))
 
 (provide 'denote-journal)
 ;;; denote-journal.el ends here
