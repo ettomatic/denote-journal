@@ -32,6 +32,7 @@
 ;;; Code:
 
 (require 'denote)
+(require 'calendar)
 
 (defgroup denote-journal nil
   "Convenience functions for daily journaling with Denote."
@@ -282,6 +283,98 @@ file's title.  This has the same meaning as in `denote-link'."
                  (denote-filetype-heuristics (buffer-file-name))
                  (denote-get-link-description path)
                  id-only)))
+
+;;;; Integration with the `calendar'
+
+(defface denote-journal-calendar
+  '((t :inherit highlight :box (:line-width (-1 . -1))))
+  "Face to mark a Denote journal entry in the `calendar'.")
+
+(defun denote-journal-calendar--file-to-date (file)
+  "Convert FILE to date.
+Return (MONTH DAY YEAR) or nil if not an Org time-string."
+  (when-let* ((identifier (denote-retrieve-filename-identifier file))
+              (date (denote--id-to-date identifier))
+              (numbers (mapcar #'string-to-number (split-string date "-"))))
+    (pcase-let ((`(,year ,month ,day) numbers))
+      (list month day year))))
+
+(defun denote-journal-calendar--get-files ()
+  "Return list of files matching variable `denote-journal-keyword'."
+  (let ((denote-directory (file-name-as-directory (denote-journal-directory))))
+    (denote-directory-files (denote-journal--keyword-regex))))
+
+(defun denote-journal-calendar--get-files-as-dates ()
+  "Return list of files as dates in the form of (MONTH DAY YEAR)."
+  (delq nil (mapcar #'denote-journal-calendar--file-to-date (denote-journal-calendar--get-files))))
+
+(defun denote-journal-calendar-mark-dates ()
+  "Mark all days in the `calendar' for which there is a Denote journal entry."
+  (interactive)
+  (when-let* ((dates (denote-journal-calendar--get-files-as-dates)))
+    (dolist (date dates)
+      (when (calendar-date-is-visible-p date)
+        (calendar-mark-visible-date date 'denote-journal-calendar)))))
+
+(defun denote-journal-calendar--date-at-point-to-internal-date (&optional calendar-date)
+  "Return `encode-time' value of `calendar' date at point or CALENDAR-DATE.
+CALENDAR-DATE is commensurate with `calendar-cursor-to-date'."
+  (when-let* ((current-date (or calendar-date (calendar-cursor-to-date t))))
+    (pcase-let ((`(,month ,day ,year) current-date))
+      (encode-time (decode-time (date-to-time (format "%s-%02d-%02d" year month day)))))))
+
+(defun denote-journal-calendar--date-at-point-to-identifier ()
+  "Return path to Denote journal entry for the `calendar' date at point."
+  (when-let* ((date (denote-journal-calendar--date-at-point-to-internal-date)))
+    (denote-journal--entry-today date)))
+
+(defun denote-journal-calendar-find-file ()
+  "Show the Denote journal entry for the `calendar' date at point.
+If there are more than one files, prompt with completion to select one
+among them."
+  (declare (interactive-only t))
+  (interactive nil calendar-mode)
+  (unless (derived-mode-p 'calendar-mode)
+    (user-error "Only use this command inside the `calendar'"))
+  (if-let* ((files (denote-journal-calendar--date-at-point-to-identifier))
+            (file (if (> (length files) 1)
+                      (completing-read "Select journal entry: " file nil t)
+                    (car files))))
+      (find-file-other-window file)
+    (user-error "No Denote journal entry for this date")))
+
+(defun denote-journal-calendar-new-or-existing ()
+  "Like `denote-journal-new-or-existing-entry' for the `calendar' date at point."
+  (declare (interactive-only t))
+  (interactive nil calendar-mode)
+  (unless (derived-mode-p 'calendar-mode)
+    (user-error "Only use this command inside the `calendar'"))
+  (if-let* ((date (calendar-cursor-to-date t))
+            (internal (denote-journal-calendar--date-at-point-to-internal-date date)))
+      (progn
+        (calendar-mark-visible-date date 'denote-journal-calendar)
+        ;; Do not use the same `calendar' window...
+        (cl-letf (((symbol-function #'find-file) #'find-file-other-window))
+          (denote-journal-new-or-existing-entry internal)))
+    (user-error "No Denote journal entry for this date")))
+
+(defvar denote-journal-calendar-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "N" #'denote-journal-calendar-new-or-existing)
+    (define-key map "F" #'denote-journal-calendar-find-file)
+    map)
+  "Key map for `denote-journal-calendar-mode'.")
+
+;;;###autoload
+(define-minor-mode denote-journal-calendar-mode
+  "Mark Denote journal entries in the `calendar' using `denote-journal-calendar' face."
+  :global t
+  :init-value nil
+  (if denote-journal-calendar-mode
+      (dolist (hook '(calendar-today-visible-hook calendar-today-invisible-hook))
+        (add-hook hook #'denote-journal-calendar-mark-dates))
+    (dolist (hook '(calendar-today-visible-hook calendar-today-invisible-hook))
+      (remove-hook hook #'denote-journal-calendar-mark-dates))))
 
 (provide 'denote-journal)
 ;;; denote-journal.el ends here
