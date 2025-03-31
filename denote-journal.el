@@ -298,13 +298,18 @@ Return (MONTH DAY YEAR) or nil if not an Org time-string."
     (pcase-let ((`(,year ,month ,day) numbers))
       (list month day year))))
 
+;; FIXME 2025-03-31: Only get files that are within the visible
+;; calendar range.  We have the building block for finding this in
+;; `calendar-date-is-visible-p'.  Though we need to be careful to also
+;; get the year when it changes.  The idea is to write the range as a
+;; regexp to pass to `denote-directory-files', like:
+;;
+;; (concat "20250[2-4].*" (denote-journal--keyword-regex)).
 (defun denote-journal-calendar--get-files ()
   "Return list of files matching variable `denote-journal-keyword'."
   (let ((denote-directory (denote-journal-directory)))
     (denote-directory-files (denote-journal--keyword-regex))))
 
-;; TODO 2025-03-31: Can we know the range of visible dates in the
-;; calendar?  Then we can only ask for those files.
 (defun denote-journal-calendar--get-files-as-dates ()
   "Return list of files as dates in the form of (MONTH DAY YEAR)."
   (when-let* ((files (denote-journal-calendar--get-files)))
