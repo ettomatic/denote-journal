@@ -303,6 +303,8 @@ Return (MONTH DAY YEAR) or nil if not an Org time-string."
   (let ((denote-directory (file-name-as-directory (denote-journal-directory))))
     (denote-directory-files (denote-journal--keyword-regex))))
 
+;; TODO 2025-03-31: Can we know the range of visible dates in the
+;; calendar?  Then we can only ask for those files.
 (defun denote-journal-calendar--get-files-as-dates ()
   "Return list of files as dates in the form of (MONTH DAY YEAR)."
   (when-let* ((files (denote-journal-calendar--get-files)))
