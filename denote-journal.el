@@ -321,10 +321,9 @@ Return (MONTH DAY YEAR) or nil if not an Org time-string."
 (defun denote-journal-calendar--date-to-time (calendar-date)
   "Return internal time of `calendar' CALENDAR-DATE.
 CALENDAR-DATE is commensurate with `calendar-cursor-to-date'."
-  (when-let* ((current-date calendar-date))
-    (pcase-let ((`(,month ,day ,year) current-date)
-                (time (format-time-string "%T")))
-      (date-to-time (format "%s-%02d-%02d %s" year month day time)))))
+  (pcase-let ((`(,month ,day ,year) calendar-date)
+              (time (format-time-string "%T")))
+    (date-to-time (format "%s-%02d-%02d %s" year month day time))))
 
 (defun denote-journal-calendar--date-at-point-to-identifier (calendar-date)
   "Return path to Denote journal entry corresponding to CALENDAR-DATE.
