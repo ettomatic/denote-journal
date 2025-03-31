@@ -305,7 +305,8 @@ Return (MONTH DAY YEAR) or nil if not an Org time-string."
 
 (defun denote-journal-calendar--get-files-as-dates ()
   "Return list of files as dates in the form of (MONTH DAY YEAR)."
-  (delq nil (mapcar #'denote-journal-calendar--file-to-date (denote-journal-calendar--get-files))))
+  (when-let* ((files (denote-journal-calendar--get-files)))
+    (delq nil (mapcar #'denote-journal-calendar--file-to-date files))))
 
 (defun denote-journal-calendar-mark-dates ()
   "Mark all days in the `calendar' for which there is a Denote journal entry."
