@@ -364,14 +364,14 @@ among them."
   (interactive nil calendar-mode)
   (unless (derived-mode-p 'calendar-mode)
     (user-error "Only use this command inside the `calendar'"))
-  (if-let* ((calendar-date (calendar-cursor-to-date))
-            (internal (denote-journal-calendar--date-to-time calendar-date)))
-      (progn
-        (calendar-mark-visible-date calendar-date 'denote-journal-calendar)
-        ;; Do not use the same `calendar' window...
-        (cl-letf (((symbol-function #'find-file) #'find-file-other-window))
-          (denote-journal-new-or-existing-entry internal)))
-    (user-error "No Denote journal entry for this date")))
+  (when-let* ((calendar-date (calendar-cursor-to-date)))
+    (if-let* ((internal (denote-journal-calendar--date-to-time calendar-date)))
+        (progn
+          (calendar-mark-visible-date calendar-date 'denote-journal-calendar)
+          ;; Do not use the same `calendar' window...
+          (cl-letf (((symbol-function #'find-file) #'find-file-other-window))
+            (denote-journal-new-or-existing-entry internal)))
+      (user-error "No Denote journal entry for this date"))))
 
 (defvar denote-journal-calendar-mode-map
   (let ((map (make-sparse-keymap)))
