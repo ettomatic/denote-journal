@@ -336,9 +336,9 @@ CALENDAR-DATE is a list of three numbers, in the form of (MONTH DAY YEAR)."
               (time (format-time-string "%T")))
     (date-to-time (format "%s-%02d-%02d %s" year month day time))))
 
-(defun denote-journal-calendar--date-at-point-to-identifier (calendar-date)
+(defun denote-journal-calendar--date-to-identifier (calendar-date)
   "Return path to Denote journal entry corresponding to CALENDAR-DATE.
-CALENDAR-DATE is commensurate with `calendar-cursor-to-date'."
+CALENDAR-DATE is a list of three numbers, in the form of (MONTH DAY YEAR)."
   (when-let* ((date (denote-journal-calendar--date-to-time calendar-date)))
     (denote-journal--entry-today date)))
 
@@ -351,7 +351,7 @@ among them."
   (unless (derived-mode-p 'calendar-mode)
     (user-error "Only use this command inside the `calendar'"))
   (if-let* ((calendar-date (calendar-cursor-to-date))
-            (files (denote-journal-calendar--date-at-point-to-identifier calendar-date))
+            (files (denote-journal-calendar--date-to-identifier calendar-date))
             (file (if (> (length files) 1)
                       (completing-read "Select journal entry: " files nil t)
                     (car files))))
