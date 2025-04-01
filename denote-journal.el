@@ -68,7 +68,7 @@ It is used by `denote-journal-new-entry' (or related)."
   "Date format to construct the title with `denote-journal-new-entry'.
 The value is either a symbol or an arbitrary string that is
 passed to `format-time-string' (consult its documentation for the
-technicalities).
+technicalities, such as how to include week numbers).
 
 Acceptable symbols and their corresponding styles are:
 

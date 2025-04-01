@@ -286,31 +286,28 @@ the file-naming scheme for searching or filtering").
 :END:
 
 #+vindex: denote-journal-title-format
-New journal entries will use the current date as the title of the new
+New journal entries will use the current date as the title of the
 entry. The exact format is controlled by the user option
-~denote-journal-title-format~. Acceptable values for this user option
-and their corresponding styles are:
+~denote-journal-title-format~. The value it can take is either nil, a
+custom string, or a symbol:
 
-| Symbol                  | Style                             |
-|-------------------------+-----------------------------------|
-| day                     | Monday                            |
-| day-date-month-year     | Monday 19 September 2023          |
-| day-date-month-year-24h | Monday 19 September 2023 20:49    |
-| day-date-month-year-12h | Monday 19 September 2023 08:49 PM |
+- When ~denote-journal-title-format~ is set to a nil value, then new
+  journal entries always prompt for a title. Users will want this if
+  they prefer to journal using a given theme for the day rather than
+  the date itself (e.g. instead of "1st of April 2025" they may prefer
+  something like "Early Spring at the hut").
 
-For example:
+- When ~denote-journal-title-format~ is set to a symbol, it is one
+  among =day= (results in a title like =Tuesday=), =day-date-month-year=
+  (for a result like =Tuesday 1 April 2025=), =day-date-month-year-24h=
+  (for =Tuesday 1 April 2025 13:46=), or =day-date-month-year-12h=
+  (e.g. =Tuesday 1 April 2025 02:46 PM=).
 
-#+begin_src emacs-lisp
-(setq denote-journal-title-format 'day-date-month-year)
-#+end_src
-
-If the value of this user option is ~nil~, then the command
-~denote-journal-new-entry~ will prompt for a title. In terms of
-workflow, using the current date as the title is better for
-maintaining a daily journal. A prompt for an arbitrary title is more
-suitable for those who like to keep a record of something like a
-thought or event (though this can also be achieved with the regular
-~denote~ command or a variant thereof like ~denote-subdirectory~).
+- When ~denote-journal-title-format~ is set to a string, it is used
+  literally except for any "format specifiers", as interpreted by the
+  function ~format-time-string~, which are replaced by their given
+  date component. For example, the ="Week %V on %A %e %B %Y at %H:%M"=
+  will yield a title like =Week 14 on 1 April 2025 at 13:48=.
 
 ** Create a journal entry using Org capture
 :PROPERTIES:
