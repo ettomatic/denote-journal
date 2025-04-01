@@ -205,6 +205,17 @@ DATE has the same format as that returned by `denote-valid-date-p'."
   (let ((denote-directory (denote-journal-directory)))
     (denote-directory-files (denote-journal--filename-date-regexp date))))
 
+(defun denote-journal-select-file-prompt (files)
+  "Prompt for file among FILES if >1, else return the `car'.
+Perform the operation relative to the variable `denote-journal-directory'."
+  (let* ((default-directory (denote-journal-directory))
+         (denote-directory default-directory)
+         (relative-files (mapcar #'denote-get-file-name-relative-to-denote-directory files))
+         (file (if (> (length files) 1)
+                   (completing-read "Select journal entry: " (denote--completion-table 'file relative-files) nil t)
+                 (car files))))
+    (concat denote-directory file)))
+
 ;;;###autoload
 (defun denote-journal-path-to-new-or-existing-entry (&optional date)
   "Return path to existing or new journal file.
@@ -218,16 +229,12 @@ them using minibuffer completion.  If there is only one, return it.  If
 there is no journal entry, create it."
   (let* ((internal-date (or (denote-valid-date-p date) (current-time)))
          (files (denote-journal--entry-today internal-date)))
-    (cond
-     ((length> files 1)
-      (completing-read "Select journal entry: " files nil t))
-     (files
-      (car files))
-     (t
+    (if files
+        (denote-journal-select-file-prompt files)
       (save-window-excursion
         (denote-journal-new-entry date)
         (save-buffer)
-        (buffer-file-name))))))
+        (buffer-file-name)))))
 
 ;;;###autoload
 (defun denote-journal-new-or-existing-entry (&optional date)
@@ -352,9 +359,7 @@ among them."
     (user-error "Only use this command inside the `calendar'"))
   (when-let* ((calendar-date (calendar-cursor-to-date)))
     (if-let* ((files (denote-journal-calendar--date-to-identifier calendar-date))
-              (file (if (> (length files) 1)
-                        (completing-read "Select journal entry: " files nil t)
-                      (car files))))
+              (file (denote-journal-select-file-prompt files)))
         (funcall denote-open-link-function file)
       (user-error "No Denote journal entry for this date"))))
 
