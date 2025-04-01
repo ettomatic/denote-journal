@@ -355,7 +355,7 @@ among them."
               (file (if (> (length files) 1)
                         (completing-read "Select journal entry: " files nil t)
                       (car files))))
-        (find-file-other-window file)
+        (funcall denote-open-link-function file)
       (user-error "No Denote journal entry for this date"))))
 
 (defun denote-journal-calendar-new-or-existing ()
@@ -369,7 +369,7 @@ among them."
         (progn
           (calendar-mark-visible-date calendar-date 'denote-journal-calendar)
           ;; Do not use the same `calendar' window...
-          (cl-letf (((symbol-function #'find-file) #'find-file-other-window))
+          (cl-letf (((symbol-function #'find-file) denote-open-link-function))
             (denote-journal-new-or-existing-entry internal)))
       (user-error "No Denote journal entry for this date"))))
 
