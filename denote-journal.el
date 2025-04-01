@@ -221,8 +221,7 @@ Perform the operation relative to the variable `denote-journal-directory'."
   "Return path to existing or new journal file.
 With optional DATE, do it for that date, else do it for today.  DATE is
 a string and has the same format as that covered in the documentation of
-the `denote' function.  It is internally processed by
-`denote-valid-date-p'.
+the `denote' function.  It is internally processed by `denote-valid-date-p'.
 
 If there are multiple journal entries for the date, prompt for one among
 them using minibuffer completion.  If there is only one, return it.  If
