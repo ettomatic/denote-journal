@@ -303,7 +303,8 @@ Return (MONTH DAY YEAR) or nil if not an Org time-string."
   (pcase-let* ((denote-directory (denote-journal-directory))
                (interval (calendar-interval
                           displayed-month displayed-year ; These are local to the `calendar'
-                          (calendar-extract-month calendar-date) (calendar-extract-year calendar-date)))
+                          (calendar-extract-month calendar-date)
+                          (calendar-extract-year calendar-date)))
                (`(,current-month ,_ ,current-year) calendar-date)
                (`(,previous-month . ,previous-year) (calendar-increment-month-cons (- interval 1)))
                (`(,next-month . ,next-year) (calendar-increment-month-cons (+ interval 1)))
