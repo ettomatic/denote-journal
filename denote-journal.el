@@ -291,8 +291,7 @@ file's title.  This has the same meaning as in `denote-link'."
   "Face to mark a Denote journal entry in the `calendar'.")
 
 (defun denote-journal-calendar--file-to-date (file)
-  "Convert FILE to date.
-Return (MONTH DAY YEAR) or nil if not an Org time-string."
+  "Convert FILE to calendar date by interpreting its identifier."
   (when-let* ((identifier (denote-retrieve-filename-identifier file))
               (date (denote--id-to-date identifier))
               (numbers (mapcar #'string-to-number (split-string date "-"))))
