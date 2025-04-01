@@ -390,7 +390,7 @@ Add the function `denote-journal-calendar-mode' to the
       (dolist (hook '(calendar-today-visible-hook calendar-today-invisible-hook))
         (add-hook hook #'denote-journal-calendar-mark-dates nil :local))
     (dolist (hook '(calendar-today-visible-hook calendar-today-invisible-hook))
-      (remove-hook hook #'denote-journal-calendar-mark-dates nil :local))))
+      (remove-hook hook #'denote-journal-calendar-mark-dates :local))))
 
 (provide 'denote-journal)
 ;;; denote-journal.el ends here
