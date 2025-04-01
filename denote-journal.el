@@ -33,6 +33,7 @@
 
 (require 'denote)
 (require 'calendar)
+(eval-when-compile (require 'cl-lib))
 
 (defgroup denote-journal nil
   "Convenience functions for daily journaling with Denote."
