@@ -371,7 +371,7 @@ among them."
         ;; Do not use the same `calendar' window...
         (cl-letf (((symbol-function #'find-file) #'find-file-other-window))
           (denote-journal-new-or-existing-entry internal)))
-    (user-error "No Denote journal entry for this calendar-date")))
+    (user-error "No Denote journal entry for this date")))
 
 (defvar denote-journal-calendar-mode-map
   (let ((map (make-sparse-keymap)))
