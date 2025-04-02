@@ -137,20 +137,24 @@ journal entry (refer to the `tmr' package on GNU ELPA)."
        (string-match-p (denote-journal--keyword-regex) (file-name-nondirectory filename))))
 
 (defun denote-journal-daily--title-format (&optional date)
-  "Return present date in `denote-journal-title-format' or prompt for title.
-With optional DATE, use it instead of the present date.  DATE has
-the same format as that returned by `current-time'."
-  (format-time-string
-   (if (and denote-journal-title-format
-            (stringp denote-journal-title-format))
-       denote-journal-title-format
-     (pcase denote-journal-title-format
-       ('day "%A")
-       ('day-date-month-year "%A %e %B %Y")
-       ('day-date-month-year-24h "%A %e %B %Y %H:%M")
-       ('day-date-month-year-12h "%A %e %B %Y %I:%M %^p")
-       (_ (denote-title-prompt (format-time-string "%F" date)))))
-   date))
+  "Return appropriate value for `denote-journal-title-format'.
+With optional DATE, use it instead of the present date wherever
+relevant.  DATE has the same format as that returned by `current-time'."
+  (let ((specifiers (pcase denote-journal-title-format
+                      ((pred null)
+                       (cons
+                        (denote-title-prompt (format-time-string "%F" date) "New journal file TITLE")
+                        :skip))
+                      ((and (pred stringp) (pred string-blank-p))
+                       (cons "" :skip))
+                      ((pred stringp) denote-journal-title-format)
+                      ('day "%A")
+                      ('day-date-month-year "%A %e %B %Y")
+                      ('day-date-month-year-24h "%A %e %B %Y %H:%M")
+                      ('day-date-month-year-12h "%A %e %B %Y %I:%M %^p"))))
+    (if (consp specifiers)
+        (car specifiers)
+      (format-time-string specifiers date))))
 
 (defun denote-journal--get-template ()
   "Return template that has `journal' key in `denote-templates'.
