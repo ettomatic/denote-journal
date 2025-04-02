@@ -297,6 +297,10 @@ custom string, or a symbol:
   the date itself (e.g. instead of "1st of April 2025" they may prefer
   something like "Early Spring at the hut").
 
+- When ~denote-journal-title-format~ is set to an empty or blank
+  string (string with only spaces), then new journal entries will not
+  use a file title. [ Part of {{{development-version}}}. ]
+
 - When ~denote-journal-title-format~ is set to a symbol, it is one
   among =day= (results in a title like =Tuesday=), =day-date-month-year=
   (for a result like =Tuesday 1 April 2025=), =day-date-month-year-24h=

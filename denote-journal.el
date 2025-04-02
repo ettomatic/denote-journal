@@ -66,21 +66,30 @@ It is used by `denote-journal-new-entry' (or related)."
 
 (defcustom denote-journal-title-format 'day-date-month-year-24h
   "Date format to construct the title with `denote-journal-new-entry'.
-The value is either a symbol or an arbitrary string that is
-passed to `format-time-string' (consult its documentation for the
-technicalities, such as how to include week numbers).
+The value it can take is either nil, a
+custom string, or a symbol:
 
-Acceptable symbols and their corresponding styles are:
+- When `denote-journal-title-format' is set to a nil value, then new
+  journal entries always prompt for a title.  Users will want this if
+  they prefer to journal using a given theme for the day rather than
+  the date itself (e.g. instead of \"1st of April 2025\" they may prefer
+  something like \"Early Spring at the hut\").
 
-| Symbol                  | Style                             |
-|-------------------------+-----------------------------------|
-| day                     | Monday                            |
-| day-date-month-year     | Monday 19 September 2023          |
-| day-date-month-year-24h | Monday 19 September 2023 20:49    |
-| day-date-month-year-12h | Monday 19 September 2023 08:49 PM |
+- When `denote-journal-title-format' is set to an empty or blank
+  string (string with only spaces), then new journal entries will not
+  use a file title.
 
-With a nil value, make `denote-journal-new-entry' prompt
-for a title."
+- When `denote-journal-title-format' is set to a symbol, it is one
+  among `day' (results in a title like \"Tuesday\"), `day-date-month-year'
+  (for a result like \"Tuesday 1 April 2025\"), `day-date-month-year-24h'
+  (for \"Tuesday 1 April 2025 13:46\"), or `day-date-month-year-12h'
+  (e.g. \"Tuesday 1 April 2025 02:46 PM\").
+
+- When `denote-journal-title-format' is set to a string, it is used
+  literally except for any \"format specifiers\", as interpreted by the
+  function `format-time-string', which are replaced by their given
+  date component.  For example, the `\"Week %V on %A %e %B %Y at %H:%M\"''
+  will yield a title like \"Week 14 on 1 April 2025 at 13:48\"."
   :group 'denote-journal
   :type '(choice
           (const :tag "Prompt for title with `denote-journal-new-entry'" nil)
