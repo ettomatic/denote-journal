@@ -169,13 +169,12 @@ relevant.  DATE has the same format as that returned by `current-time'."
   "Return template that has `journal' key in `denote-templates'.
 If no template with `journal' key exists but `denote-templates'
 is non-nil, prompt the user for a template among
-`denote-templates'.  Else return nil.
-
-Also see `denote-journal-new-entry'."
-  (if-let* ((template (alist-get 'journal denote-templates)))
-      template
-    (when denote-templates
-      (denote-template-prompt))))
+`denote-templates'.  Else return nil."
+  ;; FIXME 2025-04-02: Here we assume that `denote-templates' is an
+  ;; alist.  Maybe we need to be more careful.
+  (when denote-templates
+    (or (alist-get 'journal denote-templates)
+        (denote-template-prompt))))
 
 ;;;###autoload
 (defun denote-journal-new-entry (&optional date)
