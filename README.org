@@ -426,7 +426,7 @@ Denote Journal is meant to be a collective effort.  Every bit of help matters.
 + Contributions to code or the manual :: Honza Pokorny, Stefan
   Monnier, Vineet C. Kulkarni.
 
-+ Ideas and/or user feedback :: Kevin McCarthy.
++ Ideas and/or user feedback :: Alan Schmitt, Kevin McCarthy.
 
 * GNU Free Documentation License
 :PROPERTIES:
