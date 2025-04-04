@@ -336,7 +336,7 @@ file's title.  This has the same meaning as in `denote-link'."
      ;; for `denote-file-name-components-order'.  We should probably
      ;; have something in `denote.el' to do this fancy stuff, though
      ;; this is the first time I have a use-case for it.
-     (format "\\(%1$s\\|%2$s\\)\\(.*\\)\\|\\(%2$s\\|%1$s\\)" time-regexp keyword-regexp))))
+     (format "\\(%1$s.*%2$s\\)\\|\\(%2$s.*%1$s\\)" time-regexp keyword-regexp))))
 
 (defun denote-journal-calendar-mark-dates ()
   "Mark all visible days in the `calendar' for which there is a Denote journal entry."
