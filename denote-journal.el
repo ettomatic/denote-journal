@@ -345,8 +345,7 @@ file's title.  This has the same meaning as in `denote-link'."
               (files (denote-journal-calendar--get-files date))
               (dates (delq nil (mapcar #'denote-journal-calendar--file-to-date files))))
     (dolist (date dates)
-      (when (calendar-date-is-visible-p date)
-        (calendar-mark-visible-date date 'denote-journal-calendar)))))
+      (calendar-mark-visible-date date 'denote-journal-calendar))))
 
 (defun denote-journal-calendar--date-to-time (calendar-date)
   "Return internal time of `calendar' CALENDAR-DATE.
