@@ -4,9 +4,9 @@
 #+language: en
 #+options: ':t toc:nil author:t email:t num:t
 #+startup: content
-#+macro: stable-version 0.0.0
-#+macro: release-date N/A
-#+macro: development-version 0.1.0-dev
+#+macro: stable-version 0.1.0
+#+macro: release-date 2025-04-15
+#+macro: development-version 0.2.0-dev
 #+export_file_name: denote-journal.texi
 #+texinfo_filename: denote-journal.info
 #+texinfo_dir_category: Emacs misc features
@@ -30,7 +30,7 @@ commit, is explicitly marked as such.
 
 Current development target is {{{development-version}}}.
 
-+ Package name (GNU ELPA): ~denote-journal~ (⚠️ Not available yet)
++ Package name (GNU ELPA): ~denote-journal~
 + Official manual: <https://protesilaos.com/emacs/denote-journal>
 + Git repository: <https://github.com/protesilaos/denote-journal>
 + Backronym: Denote... Journaling Obviously Utilises Reasonableness
@@ -233,8 +233,6 @@ includes just the file's identifier.
 :CUSTOM_ID: h:integrate-with-the-calendar-to-view-or-create-journal-entries
 :END:
 
-[ Part of {{{development-version}}}. ]
-
 #+findex: denote-journal-calendar-new-or-existing
 The command ~denote-journal-calendar-new-or-existing~ creates a new
 journal entry for the date at point in the =M-x calendar= buffer. If
@@ -299,7 +297,7 @@ custom string, or a symbol:
 
 - When ~denote-journal-title-format~ is set to an empty or blank
   string (string with only spaces), then new journal entries will not
-  use a file title. [ Part of {{{development-version}}}. ]
+  use a file title.
 
 - When ~denote-journal-title-format~ is set to a symbol, it is one
   among =day= (results in a title like =Tuesday=), =day-date-month-year=
