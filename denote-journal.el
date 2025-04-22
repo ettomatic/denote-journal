@@ -317,7 +317,7 @@ file's title.  This has the same meaning as in `denote-link'."
       (list month day year))))
 
 (defun denote-journal-calendar--get-files (calendar-date)
-  "Return files around CALENDAR-DATE in variable `denote-journal-keyword'."
+  "Return files around CALENDAR-DATE in variable `denote-journal-directory'."
   (pcase-let* ((denote-directory (denote-journal-directory))
                (interval (calendar-interval
                           displayed-month displayed-year ; These are local to the `calendar'
