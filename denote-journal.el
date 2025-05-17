@@ -256,7 +256,7 @@ A journal entry is one that has the value of the variable
 If there are multiple journal entries for the current date,
 prompt for one using minibuffer completion.  If there is only
 one, visit it outright.  If there is no journal entry, create one
-by calling `denote-journal-extra-new-entry'.
+by calling `denote-journal-new-entry'.
 
 With optional DATE as a prefix argument, prompt for a date.  If
 `denote-date-prompt-use-org-read-date' is non-nil, use the Org
@@ -280,7 +280,7 @@ A journal entry is one that has the value of the variable
 If there are multiple journal entries for the current date,
 prompt for one using minibuffer completion.  If there is only
 one, link to it outright.  If there is no journal entry, create one
-by calling `denote-journal-extra-new-entry' and link to it.
+by calling `denote-journal-new-entry' and link to it.
 
 With optional DATE as a prefix argument, prompt for a date.  If
 `denote-date-prompt-use-org-read-date' is non-nil, use the Org
