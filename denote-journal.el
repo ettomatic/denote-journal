@@ -114,6 +114,11 @@ journal entry (refer to the `tmr' package on GNU ELPA)."
   :group 'denote-journal
   :type 'hook)
 
+(defcustom denote-journal-terminal-calendar-marker ?*
+  "Character to mark a Denote journal entry in the `calendar` when in terminal mode."
+  :group 'denote-journal
+  :type 'character)
+
 (defun denote-journal-directory ()
   "Make the variable `denote-journal-directory' and its parents."
   (if-let* (((stringp denote-journal-directory))
@@ -308,6 +313,14 @@ file's title.  This has the same meaning as in `denote-link'."
 (defface denote-journal-calendar '((t :box (:line-width (-1 . -1))))
   "Face to mark a Denote journal entry in the `calendar'.")
 
+(defun denote-journal--get-calendar-marker (date)
+  "Return the appropriate marker for DATE.
+If GUI Emacs, return the symbol 'denote-journal-calendar.
+If terminal Emacs, return the character `denote-journal-terminal-calendar-marker'."
+  (if (display-graphic-p)
+      'denote-journal-calendar
+    denote-journal-terminal-calendar-marker))
+
 (defun denote-journal-calendar--file-to-date (file)
   "Convert FILE to calendar date by interpreting its identifier."
   (when-let* ((identifier (denote-retrieve-filename-identifier file))
@@ -348,7 +361,7 @@ file's title.  This has the same meaning as in `denote-link'."
               (dates (delq nil (mapcar #'denote-journal-calendar--file-to-date files))))
     (dolist (date dates)
       (when (calendar-date-is-visible-p date)
-        (calendar-mark-visible-date date 'denote-journal-calendar)))))
+        (calendar-mark-visible-date date (denote-journal--get-calendar-marker date))))))
 
 (defun denote-journal-calendar--date-to-time (calendar-date)
   "Return internal time of `calendar' CALENDAR-DATE.
